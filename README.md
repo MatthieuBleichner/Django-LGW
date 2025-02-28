@@ -18,6 +18,12 @@ In order to feed the database you can import a local xml file using this command
 
 Where `<path/to/your/xml/file>` should be replaced with valid path to your xml file
 
+### API endpoints
+
+- run `python manage.py runserver`
+- get all orders: http://127.0.0.1:8000/orders/
+- get a specific order http://127.0.0.1:8000/orders/XXX (where XXX is the id of the order eg: http://127.0.0.1:8000/orders/111-2222222-3333333/)
+
 
 ### Tests
 
