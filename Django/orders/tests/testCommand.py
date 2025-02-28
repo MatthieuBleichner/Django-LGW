@@ -29,7 +29,7 @@ class ImportDataTest(TestCase):
         call_command("importData", os.path.join(THIS_DIR, 'orders-test.xml'), stdout=out)
         self.assertEqual(Order.objects.count(), 5)
         self.assertEqual(Order.objects.all()[0].marketplace, 'amazon')
-        self.assertEqual(Order.objects.all()[0].ref_id, '111-2222222-3333333')
+        self.assertEqual(Order.objects.all()[0].id, '111-2222222-3333333')
         self.assertEqual(Order.objects.all()[0].date.strftime('%Y-%m-%d'), '2014-10-21')
         self.assertEqual(Order.objects.all()[0].amount, 34.5)
         self.assertEqual(Order.objects.all()[0].currency, 'EUR')

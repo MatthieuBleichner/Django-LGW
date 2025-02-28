@@ -6,4 +6,4 @@ class OrderSerializer(ModelSerializer):
  
     class Meta:
         model = Order
-        fields = ['ref_id', 'marketplace', 'date', 'amount', 'currency']
+        fields = ['id', 'marketplace', 'date', 'amount', 'currency']

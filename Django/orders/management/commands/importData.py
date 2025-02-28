@@ -49,15 +49,15 @@ class Command(BaseCommand):
             order.amount = self.__getValue(xmlOrder, 'order_amount', 0)
             order.currency = self.__getValue(xmlOrder, 'order_currency', '')
 
-            ref_id_value = self.__getValue(xmlOrder, 'order_refid', '') #keep value for logging purposes
-            order.ref_id = ref_id_value
+            id_value = self.__getValue(xmlOrder, 'order_id', '') #keep value for logging purposes
+            order.id = id_value
             
             date_value = self.__getValue(xmlOrder, 'order_purchase_date', '')
             if (date_value != ''): # NOTE: 02.28.2025 specific for date format. If it's not a valid date do not set it, keep model default behaviour for null values
                 order.date = date_value
             
             self.stdout.write(
-                'Importing order with ref_id: "%s" ... ' %  ref_id_value, ending=""
+                'Importing order with id: "%s" ... ' %  id_value, ending=""
             )
             try: 
                 order.save()
