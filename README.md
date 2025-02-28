@@ -1,10 +1,11 @@
 # Django-LGW
 
-This is a Django application used to load some orders and retrieve them using API's endpoint
+This is a Django application used to load some orders and retrieve them using API's endpoint. SQLITE, django's SGBD is used to store all data.
 
 ### Setup
 
 - Clone this repo
+- run `python -m venv env`
 - run `source env/bin/activate`
 - `cd Django`
 - install dependencies `pip install -r requirements.txt`
