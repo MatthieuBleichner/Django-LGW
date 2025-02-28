@@ -7,6 +7,7 @@ This is a Django application used to load some orders and retrieve them using AP
 - Clone this repo
 - run `source env/bin/activate`
 - `cd Django`
+- install dependencies `pip install -r requirements.txt`
 - `python manage.py makemigrations && python manage.py migrate`
 
 ### Import Data
