@@ -10,7 +10,7 @@ class TestOrdersEnpoint(APITestCase):
         order1 = Order.objects.create(id='1234', marketplace='amazon', date='2014-10-21', amount=10, currency='EUR')
         order2 = Order.objects.create(id='56789', marketplace='amazon', date='2014-10-21', amount=50.5, currency='EUR')
 
-        response = self.client.get('/api/orders/')
+        response = self.client.get('/orders/')
 
         self.assertEqual(response.status_code, 200)
         res = response.json()
@@ -39,7 +39,7 @@ class TestOrdersEnpoint(APITestCase):
         Order.objects.create(id='1234', marketplace='amazon', date='2014-10-21', amount=10, currency='EUR')
         order2 = Order.objects.create(id='56789', marketplace='amazon', date='2014-10-21', amount=50.5, currency='EUR')
 
-        response = self.client.get("/api/orders/56789/")
+        response = self.client.get("/orders/56789/")
 
         self.assertEqual(response.status_code, 200)
         excepted = {
@@ -76,12 +76,12 @@ class TestOrdersEnpoint(APITestCase):
         Order.objects.create(id='20', marketplace='amazon', date='2014-10-21', amount=50.5, currency='EUR')
         Order.objects.create(id='21', marketplace='amazon', date='2014-10-21', amount=10, currency='EUR')
 
-        response = self.client.get('/api/orders/?page=2')
+        response = self.client.get('/orders/?page=2')
 
         self.assertEqual(response.status_code, 200)
         res = response.json()
 
         # validate pagination
         self.assertEqual(21, res['count'])
-        self.assertEqual('http://testserver/api/orders/?page=3', res['next'])
-        self.assertEqual('http://testserver/api/orders/', res['previous'])
+        self.assertEqual('http://testserver/orders/?page=3', res['next'])
+        self.assertEqual('http://testserver/orders/', res['previous'])
