@@ -1,14 +1,9 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from orders.models import Order
 from orders.serializers import OrderSerializer
+class OrderViewset(ReadOnlyModelViewSet):
 
+    serializer_class = OrderSerializer
 
-class OrderAPIView(APIView):
-
-    def get(self, *args, **kwargs):
-        queryset = Order.objects.all()
-        serializer = OrderSerializer(queryset, many=True)
-        return Response(serializer.data)
-
+    def get_queryset(self):
+        return Order.objects.all()
