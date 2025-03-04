@@ -21,10 +21,19 @@ Where `<path/to/your/xml/file>` should be replaced with valid path to your xml f
 
 ### API endpoints
 
-- run `python manage.py runserver`
-- get all orders: http://127.0.0.1:8000/orders/
-- get a specific order http://127.0.0.1:8000/orders/XXX (where XXX is the id of the order eg: http://127.0.0.1:8000/orders/111-2222222-3333333/)
+/!\ All endpoints are secured and need a valid JWT to be used. If you do not have created any user yet, please run following command `python manage.py createsuperuser --username admin --email admin@example.com`
 
+- run `python manage.py runserver`
+- log in by calling `curl  -X POST http://localHost:8000/api/token/ -H "Content-Type: application/json" -d '{"username": "admin", "password": "admin"}'`
+- In the response you'll find your JWT token whithin `access` key. Copy paste it
+
+
+Here are the two main endpoints used to retrieve orders
+- get all orders: 
+```curl -X GET http://127.0.0.1:8000/orders/ -H "Authorization: Bearer yourJWTToken"```
+- get a specific order ```curl -X GET http://localhost:8000/orders/XXX/ -H "Authorization: Bearer yourJWTToken"``` (where XXX is the id of the order eg: http://127.0.0.1:8000/orders/111-2222222-3333333/)
+
+/!\ Warning do not forget extra `/` at the end of the path due to Django URLs' normalization
 
 ### Tests
 

@@ -1,19 +1,30 @@
 from django.urls import reverse_lazy
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIRequestFactory
+from rest_framework.test import force_authenticate
 
+from django.contrib.auth.models import User
 from orders.models import Order
+from orders.views import OrderViewset
 
 class TestOrdersEnpoint(APITestCase):
 
-
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create_superuser(
+            username='superuser',
+            password='superuser',
+            email='superuser@test.com'
+        )
+    
     def test_get_orders(self):
         order1 = Order.objects.create(id='1234', marketplace='amazon', date='2014-10-21', amount=10, currency='EUR')
         order2 = Order.objects.create(id='56789', marketplace='amazon', date='2014-10-21', amount=50.5, currency='EUR')
 
-        response = self.client.get('/orders/')
+        request= self.factory.get('/orders/',)
+        force_authenticate(request, user=self.user)
+        response = OrderViewset.as_view({'get' : 'list'})(request)
 
         self.assertEqual(response.status_code, 200)
-        res = response.json()
         
         # Validate the response
         excepted = [
@@ -32,14 +43,16 @@ class TestOrdersEnpoint(APITestCase):
                 'currency': order2.currency,
             },
         ]
-        self.assertEqual(excepted, response.json()['results'])
+        self.assertEqual(excepted, response.data['results'])
 
 
     def test_get_order_by_id(self):
         Order.objects.create(id='1234', marketplace='amazon', date='2014-10-21', amount=10, currency='EUR')
         order2 = Order.objects.create(id='56789', marketplace='amazon', date='2014-10-21', amount=50.5, currency='EUR')
 
-        response = self.client.get("/orders/56789/")
+        request= self.factory.get('/orders')
+        force_authenticate(request, user=self.user)
+        response = OrderViewset.as_view({'get' : 'retrieve'})(request, pk=56789)
 
         self.assertEqual(response.status_code, 200)
         excepted = {
@@ -50,7 +63,7 @@ class TestOrdersEnpoint(APITestCase):
                 'currency': order2.currency,
             }
         
-        self.assertEqual(excepted, response.json())
+        self.assertEqual(excepted, response.data)
 
 
     def test_check_pagination(self):
@@ -76,10 +89,12 @@ class TestOrdersEnpoint(APITestCase):
         Order.objects.create(id='20', marketplace='amazon', date='2014-10-21', amount=50.5, currency='EUR')
         Order.objects.create(id='21', marketplace='amazon', date='2014-10-21', amount=10, currency='EUR')
 
-        response = self.client.get('/orders/?page=2')
+        request= self.factory.get('/orders/?page=2',)
+        force_authenticate(request, user=self.user)
+        response = OrderViewset.as_view({'get' : 'list'})(request)
 
         self.assertEqual(response.status_code, 200)
-        res = response.json()
+        res = response.data
 
         # validate pagination
         self.assertEqual(21, res['count'])
