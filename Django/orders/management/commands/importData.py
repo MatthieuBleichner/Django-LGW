@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from xml.dom import minidom
-from orders.models import Order
+from orders.models import Order, Address
 from django.core.exceptions import ValidationError
 
 
@@ -56,6 +56,26 @@ class Command(BaseCommand):
             if (date_value != ''): # NOTE: 02.28.2025 specific for date format. If it's not a valid date do not set it, keep model default behaviour for null values
                 order.date = date_value
             
+
+            # Retrieve billing address
+            address_node = xmlOrder.getElementsByTagName('billing_address')
+            if address_node:
+                billing_address, created = Address.objects.get_or_create(
+                        email=self.__getValue(address_node[0], 'billing_email', ''))
+                if not created:
+                    order.billing_adress = billing_address
+                else:
+                    billing_address.address = self.__getValue(address_node[0], 'billing_address', '')
+                    billing_address.zipCode = self.__getValue(address_node[0], 'billing_zipcode', '')
+                    billing_address.city = self.__getValue(address_node[0], 'billing_city', '')
+                    billing_address.email = self.__getValue(address_node[0], 'billing_email', '')
+                    
+                    try: 
+                        billing_address.save()
+                    except:
+                        pass
+                    else:
+                        order.billing_adress = billing_address
             self.stdout.write(
                 'Importing order with id: "%s" ... ' %  id_value, ending=""
             )
